@@ -25,4 +25,26 @@ router.get('/', async (req, res) => {
     }
 });
 
+router.delete('/:id', async (req, res) => {
+    try {
+        const {id} = req.params;
+        await inventario.eliminarProducto(id);
+        res.json({message: 'Producto eliminado exitosamente'});
+    } catch (error) {
+        res.status(500).json({error: 'Error al eliminar el producto'});
+    }
+});
+
+router.put('/:id', async (req, res) => {
+    try {
+        const {id} = req.params;
+        const {nombre, descripcion, precio} = req.body;
+
+        await inventario.editarProducto(id, nombre, descripcion, precio);
+        res.json({message: 'Producto actualizado exitosamente'});
+    } catch (error) {
+        res.status(500).json({error: 'Error al actualizar el producto'});
+    }
+});
+
 module.exports = router;

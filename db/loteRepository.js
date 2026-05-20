@@ -68,4 +68,12 @@ async function obtenerProximosAVencer() {
   return result.recordset;
 }
 
+async function editar(idLote, cantidad){
+    const pool = await getPool();
+    await pool.request()
+        .input('idLote', sql.VarChar, idLote)
+        .input('cantidad', sql.Int, cantidad)
+        .query('UPDATE Lote SET cantidad = @cantidad WHERE idLote = @idLote');
+}
+
 module.exports = {crear, eliminar, obtenerTodos, editarUnLote, obtenerUnLote, venderProducto, obtenerProximosAVencer};   

@@ -47,4 +47,29 @@ router.get('/alertas', async(req, res) =>{
     }
 });
 
+router.put('/:idLote', async(req, res) => {
+    try{
+        const {idLote} = req.params;
+        const {cantidad} = req.body;
+        if(!cantidad){
+            console.log('Campo faltante:', {cantidad});
+            return res.status(400).json({error: 'El campo cantidad es obligatorio'});
+        }
+        await inventario.editarLote(idLote, cantidad);
+        res.json({message: 'Lote actualizado exitosamente'});
+    }catch(error){
+        res.status(400).json({error: error.message});
+    }   
+});
+
+router.delete('/:idLote', async(req, res) => {
+    try{
+        const {idLote} = req.params;
+        await inventario.eliminarLote(idLote);
+        res.json({message: 'Lote eliminado exitosamente'});
+    }catch(error){
+        res.status(400).json({error: error.message});
+    }
+});
+
 module.exports = router;
