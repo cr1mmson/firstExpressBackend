@@ -4,26 +4,34 @@ const facturacionService = require('../services/FacturacionService');
 // POST: Crear una factura con múltiples productos
 router.post('/', async (req, res) => {
     try {
-        // Extraemos los datos del cuerpo de la petición
+        // 1. CAPTURA INTELIGENTE Y CONVERSIÓN A MAYÚSCULAS
+        const valorJson = req.body.metodoPago !== undefined ? req.body.metodoPago : req.body.MetodoPago;
+        let metodoPagoFinal = (valorJson && valorJson.trim() !== '') ? valorJson.trim().toUpperCase() : 'EFECTIVO';
+
+        // 2. HOMOLOGACIÓN: Si mandan "TARJETA", lo convertimos al formato exacto del CHECK
+        if (metodoPagoFinal === 'TARJETA' || metodoPagoFinal.includes('CREDITO') || metodoPagoFinal.includes('DEBITO')) {
+            metodoPagoFinal = 'TARJETA CREDITO/DEBITO';
+        }
+
         const { nombre, direccion, nit, total, productos } = req.body;
 
-        // Validación rápida
+        // Validación rápida de productos
         if (!nombre || !productos || productos.length === 0) {
             return res.status(400).json({ error: 'Datos insuficientes para facturar' });
         }
 
-        // Llamamos al servicio para procesar toda la venta
+        // 3. Enviamos el método de pago ya verificado al servicio
         const resultado = await facturacionService.procesarVentaCompleta({
             nombre,
             direccion,
             nit,
             total,
-            productos
+            productos,
+            metodoPago: metodoPagoFinal 
         });
 
         res.status(201).json(resultado);
     } catch (error) {
-        // Aquí capturamos los errores de SQL (como "Stock insuficiente" o "NIT requerido")
         res.status(400).json({ error: error.message });
     }
 });

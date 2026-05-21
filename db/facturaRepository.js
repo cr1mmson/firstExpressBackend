@@ -1,16 +1,23 @@
 const { getPool, sql } = require('./connection');
 
 // 1. Crea el encabezado y nos devuelve el ID de la factura
-async function abrirFactura(nombre, direccion, nit, total) {
+async function abrirFactura(nombre, direccion, nit, total, metodoPago) {
     const pool = await getPool();
+    
+    // Forzamos mayúsculas para asegurar compatibilidad con el CHECK de la base de datos
+    const metodoLimpio = (metodoPago || 'EFECTIVO').toUpperCase();
+
+    // Usamos .execute() que es más seguro y mapea automáticamente los parámetros
     const result = await pool.request()
-        .input('NombreCliente', sql.NVarChar, nombre)
-        .input('Direccion', sql.NVarChar, direccion)
-        .input('NIT', sql.NVarChar, nit)
+        .input('NombreCliente', sql.NVarChar(150), nombre)
+        .input('Direccion', sql.NVarChar(250), direccion)
+        .input('NIT', sql.NVarChar(20), nit)
         .input('TotalVenta', sql.Decimal(10, 2), total)
-        .output('idFacturaGenerada', sql.Int) // Capturamos el OUTPUT de SQL
+        .input('MetodoPago', sql.NVarChar(30), metodoLimpio)
+        .output('idFacturaGenerada', sql.Int) // Declaramos el parámetro de salida del SP
         .execute('dbo.sp_AbrirFactura');
     
+    // El valor de salida se captura directamente en result.output
     return result.output.idFacturaGenerada;
 }
 

@@ -4,12 +4,14 @@ class FacturacionService {
     async procesarVentaCompleta(datosVenta) {
         // datosVenta viene de Postman: { nombre, direccion, nit, total, productos: [{idProducto, cantidad}, ...] }
         try {
+            
             // 1. Abrimos el encabezado de la factura
             const idFactura = await facturaRepository.abrirFactura(
                 datosVenta.nombre,
                 datosVenta.direccion,
                 datosVenta.nit,
-                datosVenta.total
+                datosVenta.total,
+                datosVenta.metodoPago
             );
 
             // 2. Agregamos cada producto del arreglo a la misma factura
