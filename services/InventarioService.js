@@ -40,9 +40,8 @@ class InventarioService {
         await productoDB.editar(id, nombre, descripcion, precio);
     }
 
-
-    async editarLote(idLote, cantidad){
-        await loteDB.editar(idLote, cantidad);
+    async editarLotes(idLote, cantidad){
+        await loteDB.editarUnLote(idLote, cantidad);
     }
 
     async eliminarLote(id){

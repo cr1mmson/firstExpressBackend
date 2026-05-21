@@ -55,7 +55,7 @@ router.put('/:idLote', async(req, res) => {
             console.log('Campo faltante:', {cantidad});
             return res.status(400).json({error: 'El campo cantidad es obligatorio'});
         }
-        await inventario.editarLote(idLote, cantidad);
+        await inventario.editarLotes(idLote, cantidad);
         res.json({message: 'Lote actualizado exitosamente'});
     }catch(error){
         res.status(400).json({error: error.message});
