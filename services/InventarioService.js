@@ -32,6 +32,21 @@ class InventarioService {
         return await loteDB.obtenerProximosAVencer();
     }
 
+    async eliminarProducto(id){
+        await productoDB.borrar(id);
+    }
+
+    async editarProducto(id, nombre, descripcion, precio){
+        await productoDB.editar(id, nombre, descripcion, precio);
+    }
+
+    async editarLotes(idLote, cantidad){
+        await loteDB.editarUnLote(idLote, cantidad);
+    }
+
+    async eliminarLote(id){
+        await loteDB.eliminar(id);
+    }
 }
 
 module.exports = new InventarioService();

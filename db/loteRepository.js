@@ -35,6 +35,7 @@ async function editarUnLote(idLote, cantidad){
     return result;
 }   
 
+
 async function obtenerUnLote(idLote){
     const pool = await getPool();
     result = await pool.request()
@@ -67,5 +68,7 @@ async function obtenerProximosAVencer() {
     `);
   return result.recordset;
 }
+
+
 
 module.exports = {crear, eliminar, obtenerTodos, editarUnLote, obtenerUnLote, venderProducto, obtenerProximosAVencer};   
